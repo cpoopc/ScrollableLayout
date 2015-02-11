@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,12 @@ public class ListFragment extends Fragment {
             strlist.add(String.valueOf(i));
         }
         mListview.setAdapter(new MyAdapter(getActivity(), strlist));
+        mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "点击item" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 

@@ -65,6 +65,7 @@ public class ScrollableLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float deltaY = mLastY - currentY;
+                deltaY = deltaY * 7 / 10;
                 Log.d(tag,"ACTION_MOVE__deltaY:"+deltaY+",currentY:"+currentY);
                 int scrollY = getScrollY();
                 int toY = (int) (scrollY + deltaY);
