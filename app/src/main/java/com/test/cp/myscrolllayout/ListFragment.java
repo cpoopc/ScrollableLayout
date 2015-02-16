@@ -38,4 +38,7 @@ public class ListFragment extends Fragment {
         return view;
     }
 
+    public ListView getListView(){
+        return mListview;
+    }
 }

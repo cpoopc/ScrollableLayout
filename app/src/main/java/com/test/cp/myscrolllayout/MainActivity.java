@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ScrollView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.test.cp.myscrolllayout.widget.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,24 +19,43 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
+    private List<Fragment> mFragmentList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new ListFragment());
-        fragmentList.add(new ListFragment());
-        fragmentList.add(new ListFragment());
+        mFragmentList = new ArrayList<>();
+        mFragmentList.add(new ListFragment());
+        mFragmentList.add(new ListFragment());
+        mFragmentList.add(new ListFragment());
 
         List<String> titleList = new ArrayList<>();
         titleList.add("tab1");
         titleList.add("tab2");
         titleList.add("tab3");
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), fragmentList, titleList));
+        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), mFragmentList, titleList));
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.pagerStrip);
         pagerSlidingTabStrip.setViewPager(viewPager);
+        Helper.instance.setListView(((ListFragment) mFragmentList.get(0)).getListView());
+        pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
 
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                Helper.instance.setListView(((ListFragment) mFragmentList.get(i)).getListView());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+//        ScrollView
 //        DisplayMetrics metrics = new DisplayMetrics();
 //        getWindowManager().getDefaultDisplay().getMetrics(metrics);
 //        metrics.heightPixels;
