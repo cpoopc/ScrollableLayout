@@ -4,12 +4,14 @@ import android.view.View;
 import android.widget.ListView;
 
 /**
- * Created by Administrator on 2015-02-11.
+ * Created by cpoopc on 2015-02-11.
  */
 public enum  Helper {
     instance;
 
     private ListView mListView;
+
+    private int mCurrentPage;
 
     public boolean isTop(){
         if(mListView != null){
@@ -30,4 +32,11 @@ public enum  Helper {
         return mListView;
     }
 
+    public int getCurrentPage() {
+        return mCurrentPage;
+    }
+
+    public void setCurrentPage(int mCurrentPage) {
+        this.mCurrentPage = mCurrentPage;
+    }
 }
