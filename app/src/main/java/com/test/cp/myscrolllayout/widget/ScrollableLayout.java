@@ -34,9 +34,10 @@ public class ScrollableLayout extends LinearLayout {
     private int mScrollY;
     private View mHeadView;
 
+    /** 滑动方向 **/
     enum DIRECTION {
-        UP,
-        DOWN
+        UP,// 向上划
+        DOWN// 向下划
     }
 
     private int minY = 0, maxY = 0;
@@ -177,19 +178,29 @@ public class ScrollableLayout extends LinearLayout {
         if (mScroller.computeScrollOffset()) {
             int currY = mScroller.getCurrY();
             if (mDirection == DIRECTION.UP) {
+                // 手势向上划
                 if (isSticked() && Helper.instance.getListView() != null) {
-                    Helper.instance.getListView().smoothScrollBy(mScroller.getFinalY() - currY, calcDuration(mScroller.getDuration(), mScroller.timePassed()));
                     mScroller.forceFinished(true);
-                    Log.d(tag, "ListView:smoothScrollBy: " + (mScroller.getFinalY() - currY) + " duration:" + calcDuration(mScroller.getDuration(), mScroller.timePassed()));
-                    Log.d(tag, "computeScroll finish");
+                    Log.d(tag, "computeScroll finish. " +
+                            "Sticked 交给listview自己滚");
+                    return;
                 } else {
                     scrollTo(0, currY);
                     Log.d(tag, "scrollTo: " + currY);
                 }
             } else {
+                // 手势向下划
                 if (Helper.instance.isTop()) {
-                    scrollBy(0, (currY - mLastScrollerY));
-                    Log.d(tag, "scrollBy: " + (currY - mLastScrollerY));
+//                    scrollBy(0, (currY - mLastScrollerY));
+                    int deltaY = (currY - mLastScrollerY);
+                    int toY = getScrollY() + deltaY;
+                    Log.e(tag, "toY " + toY);
+                    scrollTo(0, toY);
+                    if (mCurY <= minY) {
+                        mScroller.forceFinished(true);
+                        return;
+                    }
+//                    Log.d(tag, "scrollBy: " + (currY - mLastScrollerY));
                 }
                 invalidate();
             }
@@ -197,7 +208,6 @@ public class ScrollableLayout extends LinearLayout {
         } else {
             Log.d(tag, "computeScroll finish");
         }
-        super.computeScroll();
     }
 
     @Override
@@ -210,7 +220,7 @@ public class ScrollableLayout extends LinearLayout {
             toY = minY;
         }
         y = toY - scrollY;
-//        Log.v(tag, "scrollBy Y:" + y);
+        Log.v(tag, "scrollBy Y:" + y);
         super.scrollBy(x, y);
     }
 
@@ -218,10 +228,6 @@ public class ScrollableLayout extends LinearLayout {
     public boolean isSticked() {
         Log.d(tag, "isSticked = " + (mCurY == maxY));
         return mCurY == maxY;
-    }
-
-    public boolean isTop(){
-        return mCurY == 0;
     }
 
     @Override
@@ -243,10 +249,6 @@ public class ScrollableLayout extends LinearLayout {
 
     private void checkIsClickHead(int downY, int headHeight, int scrollY) {
         isClickHead = downY + scrollY <= headHeight;
-    }
-
-    private int calcDuration(int duration, int timepass) {
-        return duration - timepass;
     }
 
     @Override
