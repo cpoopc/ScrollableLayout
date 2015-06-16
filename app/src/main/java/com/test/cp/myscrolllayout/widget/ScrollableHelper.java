@@ -1,10 +1,9 @@
 package com.test.cp.myscrolllayout.widget;
 
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
-
-import java.util.Map;
+import android.widget.ScrollView;
 
 /**
  * Created by cpoopc on 2015-06-14.
@@ -24,16 +23,15 @@ public class ScrollableHelper {
         this.mCurrentScrollableCainer = scrollableContainer;
     }
 
-//    public void setPageView(int page,View view) {
-//        viewMap.put(page, view);
-//    }
+    private View getScrollableView() {
+        if (mCurrentScrollableCainer == null) {
+            return null;
+        }
+        return mCurrentScrollableCainer.getScrollableView();
+    }
 
     public boolean isTop() {
-//        View pageView = viewMap.get(page);
-        if (mCurrentScrollableCainer == null) {
-            return false;
-        }
-        View scrollableView = mCurrentScrollableCainer.getScrollableView();
+        View scrollableView = getScrollableView();
         if (scrollableView == null) {
             return false;
         }
@@ -52,6 +50,18 @@ public class ScrollableHelper {
             }
         }
         return false;
+    }
+
+    public void smoothScrollBy(int distance, int duration) {
+        View scrollableView = getScrollableView();
+        if (scrollableView instanceof AbsListView) {
+            AbsListView absListView = (AbsListView) scrollableView;
+            absListView.smoothScrollBy(distance, duration);
+        }else if (scrollableView instanceof ScrollView) {
+            ScrollView scrollView = (ScrollView) scrollableView;
+            scrollView.smoothScrollBy(0, distance);
+        }
+
     }
 
 
