@@ -1,10 +1,10 @@
 package com.test.cp.myscrolllayout;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.test.cp.myscrolllayout.widget.Helper;
 import com.test.cp.myscrolllayout.widget.ScrollableLayout;
 
 import java.util.ArrayList;
@@ -74,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        // 头部图片集
         ViewPager vpImage = (ViewPager) findViewById(R.id.imagepager);
         vpImage.setAdapter(new MyAdapter());
 
@@ -88,9 +88,9 @@ public class MainActivity extends ActionBarActivity {
         titleList.add("tab1");
         titleList.add("tab2");
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), mFragmentList, titleList));
+        mScrollLayout.getHelper().setCurrentScrollableContainer((ListFragment)mFragmentList.get(0));
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.pagerStrip);
         pagerSlidingTabStrip.setViewPager(viewPager);
-//        Helper.instance.setListView(((ListFragment) mFragmentList.get(0)).getListView());
         pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
@@ -100,8 +100,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onPageSelected(int i) {
                 Log.e("onPageSelected","page:"+i);
-                Helper.instance.setListView(((ListFragment) mFragmentList.get(i)).getListView());
-                Helper.instance.setCurrentPage(i);
+                mScrollLayout.getHelper().setCurrentScrollableContainer((ListFragment)mFragmentList.get(i));
             }
 
             @Override

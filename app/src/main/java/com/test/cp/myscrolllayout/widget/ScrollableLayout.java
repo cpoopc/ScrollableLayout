@@ -34,16 +34,25 @@ public class ScrollableLayout extends LinearLayout {
     private int mScrollY;
     private View mHeadView;
 
-    /** 滑动方向 **/
+    /**
+     * 滑动方向 *
+     */
     enum DIRECTION {
         UP,// 向上划
         DOWN// 向下划
     }
 
-    private int minY = 0, maxY = 0;
+    private int minY = 0;
+    private int maxY=0;
 
     private int mCurY;
     private boolean isClickHead;
+
+    private ScrollableHelper mHelper;
+
+    public ScrollableHelper getHelper() {
+        return mHelper;
+    }
 
     public ScrollableLayout(Context context) {
         super(context);
@@ -69,6 +78,7 @@ public class ScrollableLayout extends LinearLayout {
 
     public void init(Context context) {
         this.context = context;
+        mHelper = new ScrollableHelper();
 //        mScroller = new OverScroller(context);
         mScroller = new Scroller(context);
 //        mScroller = new Scroller(context,new DecelerateInterpolator());
@@ -93,7 +103,6 @@ public class ScrollableLayout extends LinearLayout {
         float currentX = ev.getX();
         float currentY = ev.getY();
         float deltaY;
-//        float deltaX;
         int shiftX;
         int shiftY;
         shiftX = (int) Math.abs(currentX - mDownX);
@@ -115,20 +124,14 @@ public class ScrollableLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 deltaY = mLastY - currentY;
-//                deltaX = mLastX - currentX;
-//                shiftX = (int) Math.abs(currentX - mDownX);
-//                shiftY = (int) Math.abs(currentY - mDownY);
-                if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || Helper.instance.isTop())) {
+                if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop())) {
                     deltaY = deltaY * 9 / 10;
                     scrollBy(0, (int) deltaY);
                 }
                 mLastX = currentX;
                 mLastY = currentY;
-//                scrollTo(0, (int) deltaY);
                 break;
             case MotionEvent.ACTION_UP:
-//                shiftX = (int) Math.abs(currentX - mDownX);
-//                shiftY = (int) Math.abs(currentY - mDownY);
                 if (shiftY > shiftX) {
                     mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                     float yVelocity = -mVelocityTracker.getYVelocity();
@@ -142,7 +145,7 @@ public class ScrollableLayout extends LinearLayout {
                         Log.d(tag, "StartFling2 ScrollY():" + getScrollY() + "->FinalY:" + mScroller.getFinalY() + ",mScroller.curY:" + mScroller.getCurrY());
                         invalidate();
                     }
-                    if( isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)){
+                    if (isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
                         int action = ev.getAction();
                         ev.setAction(MotionEvent.ACTION_CANCEL);
                         boolean dd = super.dispatchTouchEvent(ev);
@@ -153,12 +156,12 @@ public class ScrollableLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_CANCEL:
                 Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
-                if( isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)){
+                if (isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
                     Log.d(tag, "ACTION_CANCEL isClickHead");
                     int action = ev.getAction();
                     ev.setAction(MotionEvent.ACTION_CANCEL);
                     boolean dd = super.dispatchTouchEvent(ev);
-                    Log.d(tag, "super.dispatchTouchEvent(ACTION_CANCEL):"+ dd);
+                    Log.d(tag, "super.dispatchTouchEvent(ACTION_CANCEL):" + dd);
                     ev.setAction(action);
                     return dd;
                 }
@@ -179,7 +182,7 @@ public class ScrollableLayout extends LinearLayout {
             int currY = mScroller.getCurrY();
             if (mDirection == DIRECTION.UP) {
                 // 手势向上划
-                if (isSticked() && Helper.instance.getListView() != null) {
+                if (isSticked()) {
                     mScroller.forceFinished(true);
                     Log.d(tag, "computeScroll finish. " +
                             "Sticked 交给listview自己滚");
@@ -190,8 +193,7 @@ public class ScrollableLayout extends LinearLayout {
                 }
             } else {
                 // 手势向下划
-                if (Helper.instance.isTop()) {
-//                    scrollBy(0, (currY - mLastScrollerY));
+                if (mHelper.isTop()) {
                     int deltaY = (currY - mLastScrollerY);
                     int toY = getScrollY() + deltaY;
                     Log.e(tag, "toY " + toY);

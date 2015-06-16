@@ -10,14 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.test.cp.myscrolllayout.widget.Helper;
+import com.test.cp.myscrolllayout.widget.ScrollableHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements ScrollableHelper.ScrollableContainer{
 
     private ListView mListview;
 
@@ -31,12 +31,9 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         mListview = (ListView) view.findViewById(R.id.listview);
-        if(page == Helper.instance.getCurrentPage()){
-            Helper.instance.setListView(mListview);
-        }
         List<String> strlist = new ArrayList<String>();
 //        for (int i = 0; i < 99; i++) {
-        for (int i = 0; i < new Random().nextInt(100) + 1; i++) {
+        for (int i = 0; i < new Random().nextInt(100) + 31; i++) {
             strlist.add(String.valueOf(i));
         }
         mListview.setAdapter(new MyAdapter(getActivity(), strlist));
@@ -49,15 +46,8 @@ public class ListFragment extends Fragment {
         return view;
     }
 
-    public ListView getListView(){
+    @Override
+    public View getScrollableView() {
         return mListview;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
     }
 }
