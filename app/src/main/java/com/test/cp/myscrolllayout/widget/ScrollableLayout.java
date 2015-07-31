@@ -281,12 +281,10 @@ public class ScrollableLayout extends LinearLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // TODO 优化:listview 滑动时会多次调用onMeasure
         mHeadView = getChildAt(0);
         measureChildWithMargins(mHeadView, widthMeasureSpec, 0, MeasureSpec.UNSPECIFIED, 0);
         maxY = mHeadView.getMeasuredHeight();
         mHeadHeight = mHeadView.getMeasuredHeight();
-//        DebugLog.e("mHeadHeight:" + mHeadHeight);
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) + maxY, MeasureSpec.EXACTLY));
     }
 

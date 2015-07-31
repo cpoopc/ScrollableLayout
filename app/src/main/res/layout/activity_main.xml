@@ -1,8 +1,5 @@
-<!--<in.srain.cube.views.ptr.PtrClassicFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/ptr_frame"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
-
 <com.test.cp.myscrolllayout.widget.ScrollableLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollableLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-        <!--android:layout_above="@+id/pagerStrip"-->
 
     </RelativeLayout>
 
@@ -34,5 +30,3 @@
         android:layout_height="match_parent" />
 
 </com.test.cp.myscrolllayout.widget.ScrollableLayout>
-
-    <!--</in.srain.cube.views.ptr.PtrClassicFrameLayout>-->
