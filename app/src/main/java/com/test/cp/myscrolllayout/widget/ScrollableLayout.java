@@ -34,6 +34,7 @@ public class ScrollableLayout extends LinearLayout {
     private int mHeadHeight = 500;
     private int mScrollY;
     private View mHeadView;
+    private int mExpandHeight = 0;
 
     /**
      * 滑动方向 *
@@ -48,6 +49,7 @@ public class ScrollableLayout extends LinearLayout {
 
     private int mCurY;
     private boolean isClickHead;
+    private boolean isClickHeadExpand;
 
     private ScrollableHelper mHelper;
 
@@ -120,12 +122,18 @@ public class ScrollableLayout extends LinearLayout {
                 mLastY = currentY;
                 mScrollY = getScrollY();
                 checkIsClickHead((int) currentY, mHeadHeight, getScrollY());
+                checkIsClickHeadExpand((int) currentY, mHeadHeight, getScrollY());
+                Log.d(tag, "isClickHead:" + isClickHead);
+                Log.d(tag, "checkIsClickHeadExpand:" + isClickHeadExpand);
                 Log.d(tag, "ACTION_DOWN__mDownY:" + mDownY);
                 mScroller.forceFinished(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 deltaY = mLastY - currentY;
-                if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop())) {
+                Log.d(tag, "mLastY:" + mLastY+"      currentY:" + currentY+"      deltaY:" + deltaY+"      shiftY:" + shiftY
+                        +"      mTouchSlop:" + mTouchSlop+"      shiftX:" + shiftX);
+                Log.d(tag, "deltaY:" + deltaY);
+                if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
                     deltaY = deltaY * 9 / 10;
                     scrollBy(0, (int) deltaY);
                 }
@@ -196,7 +204,7 @@ public class ScrollableLayout extends LinearLayout {
                 }
             } else {
                 // 手势向下划
-                if (mHelper.isTop()) {
+                if (mHelper.isTop() || isClickHeadExpand) {
                     int deltaY = (currY - mLastScrollerY);
                     int toY = getScrollY() + deltaY;
                     Log.e(tag, "toY " + toY);
@@ -256,18 +264,34 @@ public class ScrollableLayout extends LinearLayout {
         isClickHead = downY + scrollY <= headHeight;
     }
 
+    private void checkIsClickHeadExpand(int downY, int headHeight, int scrollY) {
+        if (mExpandHeight <= 0) {
+            isClickHeadExpand = false;
+        }
+        isClickHeadExpand = downY + scrollY <= headHeight + mExpandHeight;
+    }
+
+    public void setClickHeadExpand(int expandHeight) {
+        mExpandHeight = expandHeight;
+    }
+
     private int calcDuration(int duration, int timepass) {
         return duration - timepass;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // TODO 优化:listview 滑动时会多次调用onMeasure
         mHeadView = getChildAt(0);
-        measureChildWithMargins(mHeadView, widthMeasureSpec, 0, heightMeasureSpec, 0);
+        measureChildWithMargins(mHeadView, widthMeasureSpec, 0, MeasureSpec.UNSPECIFIED, 0);
         maxY = mHeadView.getMeasuredHeight();
         mHeadHeight = mHeadView.getMeasuredHeight();
-        Log.e(tag, "onMeasure " + mHeadView.getMeasuredHeight());
-        super.onMeasure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(heightMeasureSpec) + maxY, MeasureSpec.EXACTLY));
+//        DebugLog.e("mHeadHeight:" + mHeadHeight);
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) + maxY, MeasureSpec.EXACTLY));
+    }
+
+    public int getMaxY() {
+        return maxY;
     }
 
 }

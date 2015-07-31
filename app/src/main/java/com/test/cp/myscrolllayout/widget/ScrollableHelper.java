@@ -45,7 +45,7 @@ public class ScrollableHelper {
         if(adapterView != null){
             int firstVisiblePosition = adapterView.getFirstVisiblePosition();
             View childAt = adapterView.getChildAt(0);
-            if(firstVisiblePosition == 0 && childAt != null && childAt.getTop() == 0){
+            if(childAt == null || (firstVisiblePosition == 0 && childAt != null && childAt.getTop() == 0)){
                 return true;
             }
         }
