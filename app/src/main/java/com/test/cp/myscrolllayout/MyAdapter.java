@@ -40,6 +40,7 @@ public class MyAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, null, false);
+        convertView.setBackgroundColor(mContext.getResources().getColor(ColorsConstant.colors[position % ColorsConstant.colors.length]));
         TextView tv = (TextView) convertView.findViewById(R.id.tv);
         tv.setText(strList.get(position));
         return convertView;

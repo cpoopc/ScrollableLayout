@@ -26,15 +26,13 @@ public class MainActivity extends ActionBarActivity {
 
     class MyAdapter extends PagerAdapter{
 
-        int[] images = new int[]{R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher,R.drawable.ic_launcher};
-
         List<ImageView> imageViews = new ArrayList<ImageView>();
 
         MyAdapter() {
-            for (int i = 0;i<images.length;i++){
+            for (int i = 0;i< ColorsConstant.colors.length;i++){
                 ImageView imageView = new ImageView(MainActivity.this);
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(50,50));
-                imageView.setImageResource(images[i]);
+                imageView.setBackgroundColor(getResources().getColor(ColorsConstant.colors[i]));
                 final int index = i;
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -48,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            return images.length;
+            return ColorsConstant.colors.length;
         }
 
         @Override
@@ -79,9 +77,9 @@ public class MainActivity extends ActionBarActivity {
 
         mScrollLayout = (ScrollableLayout) findViewById(R.id.scrollableLayout);
         mFragmentList = new ArrayList<>();
-        mFragmentList.add(new ListFragment(0));
-        mFragmentList.add(new ListFragment(1));
-        mFragmentList.add(new ListFragment(2));
+        mFragmentList.add(ListFragment.newInstance(0));
+        mFragmentList.add(ListFragment.newInstance(1));
+        mFragmentList.add(ListFragment.newInstance(2));
 
         List<String> titleList = new ArrayList<>();
         titleList.add("tab0");

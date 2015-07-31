@@ -23,8 +23,14 @@ public class ListFragment extends Fragment implements ScrollableHelper.Scrollabl
 
     private int page;
 
-    public ListFragment(int page) {
+    public void setPage(int page) {
         this.page = page;
+    }
+
+    public static ListFragment newInstance(int page) {
+        ListFragment listFragment = new ListFragment();
+        listFragment.setPage(page);
+        return listFragment;
     }
 
     @Override
