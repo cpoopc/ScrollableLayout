@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout.widget;
+package com.cpoopc.scrollablelayoutlib;
 
 import android.view.View;
 import android.widget.AbsListView;
@@ -6,17 +6,14 @@ import android.widget.AdapterView;
 import android.widget.ScrollView;
 
 /**
- * Created by cpoopc on 2015-06-14.
+ * Created by cpoopc on 2015-02-10.
  */
 public class ScrollableHelper {
-
-//    int page;
-//    Map<Integer, View> viewMap;
 
     private ScrollableContainer mCurrentScrollableCainer;
 
     public interface ScrollableContainer{
-        public View getScrollableView();
+        View getScrollableView();
     }
 
     public void setCurrentScrollableContainer(ScrollableContainer scrollableContainer) {

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.test.cp.myscrolllayout.constant.ColorsConstant;
+
 import java.util.List;
 
 /**

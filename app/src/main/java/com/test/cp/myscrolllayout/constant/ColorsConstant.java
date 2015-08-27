@@ -1,6 +1,8 @@
-package com.test.cp.myscrolllayout;/**
+package com.test.cp.myscrolllayout.constant;/**
  * Created by cpoopc on 2015/7/31.
  */
+
+import com.test.cp.myscrolllayout.R;
 
 /**
  * User: cpoopc

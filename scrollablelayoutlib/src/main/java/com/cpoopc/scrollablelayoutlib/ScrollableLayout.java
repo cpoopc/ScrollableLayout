@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout.widget;
+package com.cpoopc.scrollablelayoutlib;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Scroller;
 
 /**
@@ -31,7 +30,7 @@ public class ScrollableLayout extends LinearLayout {
     private int mMaximumVelocity;
     // 方向
     private DIRECTION mDirection;
-    private int mHeadHeight = 500;
+    private int mHeadHeight;
     private int mScrollY;
     private View mHeadView;
     private int mExpandHeight = 0;
@@ -82,19 +81,17 @@ public class ScrollableLayout extends LinearLayout {
     public void init(Context context) {
         this.context = context;
         mHelper = new ScrollableHelper();
-//        mScroller = new OverScroller(context);
         mScroller = new Scroller(context);
-//        mScroller = new Scroller(context,new DecelerateInterpolator());
         final ViewConfiguration configuration = ViewConfiguration.get(context);
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
-        Log.d(tag, "mMaximumVelocity:" + mMaximumVelocity);
+//        Log.d(tag, "mMaximumVelocity:" + mMaximumVelocity);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.d(tag, "onLayout child:" + mHeadView);
+//        Log.d(tag, "onLayout child:" + mHeadView);
         if (mHeadView != null && !mHeadView.isClickable()) {
             mHeadView.setClickable(true);
         }
@@ -123,16 +120,16 @@ public class ScrollableLayout extends LinearLayout {
                 mScrollY = getScrollY();
                 checkIsClickHead((int) currentY, mHeadHeight, getScrollY());
                 checkIsClickHeadExpand((int) currentY, mHeadHeight, getScrollY());
-                Log.d(tag, "isClickHead:" + isClickHead);
-                Log.d(tag, "checkIsClickHeadExpand:" + isClickHeadExpand);
-                Log.d(tag, "ACTION_DOWN__mDownY:" + mDownY);
+//                Log.d(tag, "isClickHead:" + isClickHead);
+//                Log.d(tag, "checkIsClickHeadExpand:" + isClickHeadExpand);
+//                Log.d(tag, "ACTION_DOWN__mDownY:" + mDownY);
                 mScroller.forceFinished(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 deltaY = mLastY - currentY;
-                Log.d(tag, "mLastY:" + mLastY+"      currentY:" + currentY+"      deltaY:" + deltaY+"      shiftY:" + shiftY
-                        +"      mTouchSlop:" + mTouchSlop+"      shiftX:" + shiftX);
-                Log.d(tag, "deltaY:" + deltaY);
+//                Log.d(tag, "mLastY:" + mLastY+"      currentY:" + currentY+"      deltaY:" + deltaY+"      shiftY:" + shiftY
+//                        +"      mTouchSlop:" + mTouchSlop+"      shiftX:" + shiftX);
+//                Log.d(tag, "deltaY:" + deltaY);
                 if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
                     deltaY = deltaY * 9 / 10;
                     scrollBy(0, (int) deltaY);
@@ -144,7 +141,7 @@ public class ScrollableLayout extends LinearLayout {
                 if (shiftY > shiftX) {
                     mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                     float yVelocity = -mVelocityTracker.getYVelocity();
-                    Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
+//                    Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
                     if (Math.abs(yVelocity) > mMinimumVelocity) {
                         mDirection = yVelocity > 0 ? DIRECTION.UP : DIRECTION.DOWN;
                         if (mDirection == DIRECTION.UP && isSticked()) {
@@ -152,8 +149,8 @@ public class ScrollableLayout extends LinearLayout {
                             mScroller.fling(0, getScrollY(), 0, (int) yVelocity, 0, 0, -Integer.MAX_VALUE, Integer.MAX_VALUE);
                             mScroller.computeScrollOffset();
                             mLastScrollerY = getScrollY();
-                            Log.d(tag, "StartFling1 yVelocity:" + yVelocity + " duration:" + mScroller.getDuration());
-                            Log.d(tag, "StartFling2 ScrollY():" + getScrollY() + "->FinalY:" + mScroller.getFinalY() + ",mScroller.curY:" + mScroller.getCurrY());
+//                            Log.d(tag, "StartFling1 yVelocity:" + yVelocity + " duration:" + mScroller.getDuration());
+//                            Log.d(tag, "StartFling2 ScrollY():" + getScrollY() + "->FinalY:" + mScroller.getFinalY() + ",mScroller.curY:" + mScroller.getCurrY());
                             invalidate();
                         }
                     }
@@ -167,13 +164,13 @@ public class ScrollableLayout extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
-                Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
+//                Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
                 if (isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
-                    Log.d(tag, "ACTION_CANCEL isClickHead");
+//                    Log.d(tag, "ACTION_CANCEL isClickHead");
                     int action = ev.getAction();
                     ev.setAction(MotionEvent.ACTION_CANCEL);
                     boolean dd = super.dispatchTouchEvent(ev);
-                    Log.d(tag, "super.dispatchTouchEvent(ACTION_CANCEL):" + dd);
+//                    Log.d(tag, "super.dispatchTouchEvent(ACTION_CANCEL):" + dd);
                     ev.setAction(action);
                     return dd;
                 }
@@ -188,7 +185,7 @@ public class ScrollableLayout extends LinearLayout {
 
     @Override
     public void computeScroll() {
-        Log.d(tag, "computeScroll()");
+//        Log.d(tag, "computeScroll()");
         if (mScroller.computeScrollOffset()) {
             final int currY = mScroller.getCurrY();
             if (mDirection == DIRECTION.UP) {
@@ -196,18 +193,18 @@ public class ScrollableLayout extends LinearLayout {
                 if (isSticked()) {
                     mHelper.smoothScrollBy(mScroller.getFinalY() - currY, calcDuration(mScroller.getDuration(), mScroller.timePassed()));
                     mScroller.forceFinished(true);
-                    Log.d(tag, "computeScroll finish. post smoothScrollBy");
+//                    Log.d(tag, "computeScroll finish. post smoothScrollBy");
                     return;
                 } else {
                     scrollTo(0, currY);
-                    Log.d(tag, "scrollTo: " + currY);
+//                    Log.d(tag, "scrollTo: " + currY);
                 }
             } else {
                 // 手势向下划
                 if (mHelper.isTop() || isClickHeadExpand) {
                     int deltaY = (currY - mLastScrollerY);
                     int toY = getScrollY() + deltaY;
-                    Log.e(tag, "toY " + toY);
+//                    Log.e(tag, "toY " + toY);
                     scrollTo(0, toY);
                     if (mCurY <= minY) {
                         mScroller.forceFinished(true);
@@ -233,13 +230,13 @@ public class ScrollableLayout extends LinearLayout {
             toY = minY;
         }
         y = toY - scrollY;
-        Log.v(tag, "scrollBy Y:" + y);
+//        Log.v(tag, "scrollBy Y:" + y);
         super.scrollBy(x, y);
     }
 
 
     public boolean isSticked() {
-        Log.d(tag, "isSticked = " + (mCurY == maxY));
+//        Log.d(tag, "isSticked = " + (mCurY == maxY));
         return mCurY == maxY;
     }
 
@@ -271,6 +268,10 @@ public class ScrollableLayout extends LinearLayout {
         isClickHeadExpand = downY + scrollY <= headHeight + mExpandHeight;
     }
 
+    /**
+     * 扩大头部点击滑动范围
+     * @param expandHeight
+     */
     public void setClickHeadExpand(int expandHeight) {
         mExpandHeight = expandHeight;
     }

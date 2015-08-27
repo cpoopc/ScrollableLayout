@@ -1,1 +1,1 @@
-include ':app', ':PagerSlidingTabStrip'
+include ':app', ':PagerSlidingTabStrip', ':scrollablelayoutlib'
