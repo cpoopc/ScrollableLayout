@@ -51,9 +51,9 @@ public class ScrollableHelper {
     }
 
     /**
-     * ÅĞ¶ÏÊÇ·ñ»¬¶¯µ½¶¥²¿·½·¨,ScrollAbleLayout¸ù¾İ´Ë·½·¨À´×öÒ»Ğ©Âß¼­ÅĞ¶Ï
-     * Ä¿Ç°Ö»ÊµÏÖÁËAdapterView,ScrollView
-     * ĞèÒªÖ§³ÖÆäËûview¿ÉÒÔ×ÔĞĞ²¹³äÊµÏÖ
+     * åˆ¤æ–­æ˜¯å¦æ»‘åŠ¨åˆ°é¡¶éƒ¨æ–¹æ³•,ScrollAbleLayoutæ ¹æ®æ­¤æ–¹æ³•æ¥åšä¸€äº›é€»è¾‘åˆ¤æ–­
+     * ç›®å‰åªå®ç°äº†AdapterView,ScrollView
+     * éœ€è¦æ”¯æŒå…¶ä»–viewå¯ä»¥è‡ªè¡Œè¡¥å……å®ç°
      * @return
      */
     public boolean isTop() {
