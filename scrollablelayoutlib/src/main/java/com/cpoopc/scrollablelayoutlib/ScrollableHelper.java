@@ -50,6 +50,12 @@ public class ScrollableHelper {
         return mCurrentScrollableCainer.getScrollableView();
     }
 
+    /**
+     * 判断是否滑动到顶部方法,ScrollAbleLayout根据此方法来做一些逻辑判断
+     * 目前只实现了AdapterView,ScrollView
+     * 需要支持其他view可以自行补充实现
+     * @return
+     */
     public boolean isTop() {
         View scrollableView = getScrollableView();
         if (scrollableView == null) {
@@ -57,6 +63,9 @@ public class ScrollableHelper {
         }
         if (scrollableView instanceof AdapterView) {
             return isAdapterViewTop((AdapterView) scrollableView);
+        }
+        if (scrollableView instanceof ScrollView) {
+            return isScrollViewTop((ScrollView) scrollableView);
         }
         return false;
     }
@@ -68,6 +77,15 @@ public class ScrollableHelper {
             if(childAt == null || (firstVisiblePosition == 0 && childAt != null && childAt.getTop() == 0)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    private static boolean isScrollViewTop(ScrollView scrollView){
+        if(scrollView != null) {
+            int scrollViewY = scrollView.getScrollY();
+            android.util.Log.e("cp:", "isScrollViewTop scrollY:" + scrollViewY);
+            return scrollViewY <= 0;
         }
         return false;
     }

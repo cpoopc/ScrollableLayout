@@ -208,7 +208,7 @@ public class ScrollableLayout extends LinearLayout {
 
     @Override
     public void computeScroll() {
-//        Log.d(tag, "computeScroll()");
+        Log.d(tag, "computeScroll()");
         if (mScroller.computeScrollOffset()) {
             final int currY = mScroller.getCurrY();
             if (mDirection == DIRECTION.UP) {
@@ -216,24 +216,24 @@ public class ScrollableLayout extends LinearLayout {
                 if (isSticked()) {
                     mHelper.smoothScrollBy(mScroller.getFinalY() - currY, calcDuration(mScroller.getDuration(), mScroller.timePassed()));
                     mScroller.forceFinished(true);
-//                    Log.d(tag, "computeScroll finish. post smoothScrollBy");
+                    Log.d(tag, "computeScroll finish. post smoothScrollBy");
                     return;
                 } else {
                     scrollTo(0, currY);
-//                    Log.d(tag, "scrollTo: " + currY);
+                    Log.d(tag, "scrollTo: " + currY);
                 }
             } else {
                 // 手势向下划
                 if (mHelper.isTop() || isClickHeadExpand) {
                     int deltaY = (currY - mLastScrollerY);
                     int toY = getScrollY() + deltaY;
-//                    Log.e(tag, "toY " + toY);
+                    Log.e(tag, "toY " + toY);
                     scrollTo(0, toY);
                     if (mCurY <= minY) {
                         mScroller.forceFinished(true);
                         return;
                     }
-//                    Log.d(tag, "scrollBy: " + (currY - mLastScrollerY));
+                    Log.d(tag, "scrollBy: " + (currY - mLastScrollerY));
                 }
                 invalidate();
             }

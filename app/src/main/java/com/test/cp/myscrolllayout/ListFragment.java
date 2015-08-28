@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class ListFragment extends Fragment implements ScrollableHelper.ScrollableContainer{
+public class ListFragment extends ScrollAbleFragment implements ScrollableHelper.ScrollableContainer{
 
     private ListView mListview;
 
