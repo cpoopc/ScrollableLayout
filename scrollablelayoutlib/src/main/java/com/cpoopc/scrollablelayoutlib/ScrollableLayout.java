@@ -26,7 +26,9 @@ package com.cpoopc.scrollablelayoutlib;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -57,6 +59,8 @@ public class ScrollableLayout extends LinearLayout {
     private View mHeadView;
     private int mExpandHeight = 0;
     private int sysVersion;
+    private ViewPager childViewPager;
+    private boolean flag1,flag2;
 
     /**
      * 滑动方向 *
@@ -110,16 +114,6 @@ public class ScrollableLayout extends LinearLayout {
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
         sysVersion = Build.VERSION.SDK_INT;
-//        Log.d(tag, "mMaximumVelocity:" + mMaximumVelocity);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//        Log.d(tag, "onLayout child:" + mHeadView);
-        if (mHeadView != null && !mHeadView.isClickable()) {
-            mHeadView.setClickable(true);
-        }
-        super.onLayout(changed, l, t, r, b);
     }
 
     @Override
@@ -134,6 +128,8 @@ public class ScrollableLayout extends LinearLayout {
 //        initVelocityTrackerIfNotExists();
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                flag1 = true;
+                flag2 = true;
                 mDownX = currentX;
                 mDownY = currentY;
                 mLastX = currentX;
@@ -155,14 +151,28 @@ public class ScrollableLayout extends LinearLayout {
 //                Log.d(tag, "mLastY:" + mLastY+"      currentY:" + currentY+"      deltaY:" + deltaY+"      shiftY:" + shiftY
 //                        +"      mTouchSlop:" + mTouchSlop+"      shiftX:" + shiftX);
 //                Log.d(tag, "deltaY:" + deltaY);
-                if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
+                if (flag1) {
+                    if (shiftX > mTouchSlop && shiftX > shiftY) {
+                        flag1 = false;
+                        flag2 = false;
+                    } else if (shiftY > mTouchSlop && shiftY > shiftX) {
+                        flag1 = false;
+                        flag2 = true;
+                    }
+                }
+                
+                if (flag2 && shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
+
+                    if (childViewPager != null) {
+                        childViewPager.requestDisallowInterceptTouchEvent(true);
+                    }
                     scrollBy(0, (int) (deltaY + 0.5));
                 }
                 mLastX = currentX;
                 mLastY = currentY;
                 break;
             case MotionEvent.ACTION_UP:
-                if (shiftY > shiftX && shiftY > mTouchSlop) {
+                if (flag2 && shiftY > shiftX && shiftY > mTouchSlop) {
                     mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                     float yVelocity = -mVelocityTracker.getYVelocity();
 //                    Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
@@ -190,7 +200,7 @@ public class ScrollableLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_CANCEL:
 //                Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
-                if (isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
+                if (flag2 && isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
 //                    Log.d(tag, "ACTION_CANCEL isClickHead");
                     int action = ev.getAction();
                     ev.setAction(MotionEvent.ACTION_CANCEL);
@@ -347,4 +357,18 @@ public class ScrollableLayout extends LinearLayout {
         return maxY;
     }
 
+    @Override
+    protected void onFinishInflate() {
+        if (mHeadView != null && !mHeadView.isClickable()) {
+            mHeadView.setClickable(true);
+        }
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = getChildAt(i);
+            if (childAt != null && childAt instanceof ViewPager) {
+                childViewPager = (ViewPager) childAt;
+            }
+        }
+        super.onFinishInflate();
+    }
 }
