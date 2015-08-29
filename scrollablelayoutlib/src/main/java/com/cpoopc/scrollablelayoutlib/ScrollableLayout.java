@@ -27,7 +27,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -215,7 +214,7 @@ public class ScrollableLayout extends LinearLayout {
             if (mDirection == DIRECTION.UP) {
                 // 手势向上划
                 if (isSticked()) {
-                    mHelper.smoothScrollBy(mScroller.getFinalY() - currY, calcDuration(mScroller.getDuration(), mScroller.timePassed()));
+                    mHelper.smoothScrollBy(mScroller.getCurrVelocity(), mScroller.getFinalY() - currY, calcDuration(mScroller.getDuration(), mScroller.timePassed()));
                     mScroller.forceFinished(true);
 //                    Log.d(tag, "computeScroll finish. post smoothScrollBy");
                     return;

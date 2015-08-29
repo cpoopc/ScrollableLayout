@@ -23,6 +23,7 @@
  */
 package com.cpoopc.scrollablelayoutlib;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -34,6 +35,8 @@ import android.widget.ScrollView;
 public class ScrollableHelper {
 
     private ScrollableContainer mCurrentScrollableCainer;
+
+    private int sysVersion = android.os.Build.VERSION.SDK_INT;
 
     public interface ScrollableContainer{
         View getScrollableView();
@@ -90,14 +93,19 @@ public class ScrollableHelper {
         return false;
     }
 
-    public void smoothScrollBy(int distance, int duration) {
+    @SuppressLint("NewApi")
+    public void smoothScrollBy(float velocityY, int distance, int duration) {
         View scrollableView = getScrollableView();
         if (scrollableView instanceof AbsListView) {
             AbsListView absListView = (AbsListView) scrollableView;
-            absListView.smoothScrollBy(distance, duration);
-        }else if (scrollableView instanceof ScrollView) {
+            if (sysVersion >= 21) {
+                absListView.fling((int) velocityY);
+            } else {
+                absListView.smoothScrollBy(distance, duration);
+            }
+        } else if (scrollableView instanceof ScrollView) {
             ScrollView scrollView = (ScrollView) scrollableView;
-            scrollView.smoothScrollBy(0, distance);
+            scrollView.fling((int) velocityY);
         }
 
     }
