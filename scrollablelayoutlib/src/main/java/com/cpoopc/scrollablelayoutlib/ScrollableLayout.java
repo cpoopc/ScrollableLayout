@@ -27,6 +27,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -66,7 +67,7 @@ public class ScrollableLayout extends LinearLayout {
     }
 
     private int minY = 0;
-    private int maxY=0;
+    private int maxY = 0;
 
     private int mCurY;
     private boolean isClickHead;
@@ -154,21 +155,20 @@ public class ScrollableLayout extends LinearLayout {
 //                        +"      mTouchSlop:" + mTouchSlop+"      shiftX:" + shiftX);
 //                Log.d(tag, "deltaY:" + deltaY);
                 if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
-                    deltaY = deltaY * 9 / 10;
                     scrollBy(0, (int) deltaY);
                 }
                 mLastX = currentX;
                 mLastY = currentY;
                 break;
             case MotionEvent.ACTION_UP:
-                if (shiftY > shiftX) {
+                if (shiftY > shiftX && shiftY > mTouchSlop) {
                     mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                     float yVelocity = -mVelocityTracker.getYVelocity();
 //                    Log.d(tag, "ACTION:" + (ev.getAction() == MotionEvent.ACTION_UP ? "UP" : "CANCEL"));
                     if (Math.abs(yVelocity) > mMinimumVelocity) {
                         mDirection = yVelocity > 0 ? DIRECTION.UP : DIRECTION.DOWN;
                         if (mDirection == DIRECTION.UP && isSticked()) {
-                        }else{
+                        } else {
                             mScroller.fling(0, getScrollY(), 0, (int) yVelocity, 0, 0, -Integer.MAX_VALUE, Integer.MAX_VALUE);
                             mScroller.computeScrollOffset();
                             mLastScrollerY = getScrollY();
@@ -177,7 +177,8 @@ public class ScrollableLayout extends LinearLayout {
                             invalidate();
                         }
                     }
-                    if (isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
+//                    if ((shiftX > mTouchSlop || shiftY > mTouchSlop)) {
+                    if (isClickHead || !isSticked()) {
                         int action = ev.getAction();
                         ev.setAction(MotionEvent.ACTION_CANCEL);
                         boolean dd = super.dispatchTouchEvent(ev);
@@ -205,6 +206,10 @@ public class ScrollableLayout extends LinearLayout {
     }
 
     private int mLastScrollerY;
+
+//    private int getScrollerVelocity() {
+//
+//    }
 
     @Override
     public void computeScroll() {
@@ -308,6 +313,7 @@ public class ScrollableLayout extends LinearLayout {
 
     /**
      * 扩大头部点击滑动范围
+     *
      * @param expandHeight
      */
     public void setClickHeadExpand(int expandHeight) {
