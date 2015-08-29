@@ -27,7 +27,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -57,6 +56,7 @@ public class ScrollableLayout extends LinearLayout {
     private int mScrollY;
     private View mHeadView;
     private int mExpandHeight = 0;
+    private int sysVersion;
 
     /**
      * 滑动方向 *
@@ -109,6 +109,7 @@ public class ScrollableLayout extends LinearLayout {
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+        sysVersion = Build.VERSION.SDK_INT;
 //        Log.d(tag, "mMaximumVelocity:" + mMaximumVelocity);
     }
 
@@ -207,9 +208,16 @@ public class ScrollableLayout extends LinearLayout {
 
     private int mLastScrollerY;
 
-//    private int getScrollerVelocity() {
-//
-//    }
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private int getScrollerVelocity(int distance, int duration) {
+        if (mScroller == null) {
+            return 0;
+        } else if (sysVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return (int) mScroller.getCurrVelocity();
+        } else {
+            return distance / duration;
+        }
+    }
 
     @Override
     public void computeScroll() {
@@ -219,7 +227,9 @@ public class ScrollableLayout extends LinearLayout {
             if (mDirection == DIRECTION.UP) {
                 // 手势向上划
                 if (isSticked()) {
-                    mHelper.smoothScrollBy(mScroller.getCurrVelocity(), mScroller.getFinalY() - currY, calcDuration(mScroller.getDuration(), mScroller.timePassed()));
+                    int distance = mScroller.getFinalY() - currY;
+                    int duration = calcDuration(mScroller.getDuration(), mScroller.timePassed());
+                    mHelper.smoothScrollBy(getScrollerVelocity(distance, duration), distance, duration);
                     mScroller.forceFinished(true);
 //                    Log.d(tag, "computeScroll finish. post smoothScrollBy");
                     return;
