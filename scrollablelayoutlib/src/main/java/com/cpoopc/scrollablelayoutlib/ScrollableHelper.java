@@ -87,7 +87,7 @@ public class ScrollableHelper {
     private static boolean isScrollViewTop(ScrollView scrollView){
         if(scrollView != null) {
             int scrollViewY = scrollView.getScrollY();
-            android.util.Log.e("cp:", "isScrollViewTop scrollY:" + scrollViewY);
+//            android.util.Log.e("cp:", "isScrollViewTop scrollY:" + scrollViewY);
             return scrollViewY <= 0;
         }
         return false;

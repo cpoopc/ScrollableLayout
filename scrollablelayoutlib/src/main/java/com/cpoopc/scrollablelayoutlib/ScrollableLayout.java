@@ -156,7 +156,7 @@ public class ScrollableLayout extends LinearLayout {
 //                        +"      mTouchSlop:" + mTouchSlop+"      shiftX:" + shiftX);
 //                Log.d(tag, "deltaY:" + deltaY);
                 if (shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
-                    scrollBy(0, (int) deltaY);
+                    scrollBy(0, (int) (deltaY + 0.5));
                 }
                 mLastX = currentX;
                 mLastY = currentY;
