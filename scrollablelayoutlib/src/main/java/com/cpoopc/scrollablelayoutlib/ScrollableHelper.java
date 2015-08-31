@@ -24,6 +24,8 @@
 package com.cpoopc.scrollablelayoutlib;
 
 import android.annotation.SuppressLint;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -70,6 +72,23 @@ public class ScrollableHelper {
         if (scrollableView instanceof ScrollView) {
             return isScrollViewTop((ScrollView) scrollableView);
         }
+        if (scrollableView instanceof RecyclerView) {
+            return isRecyclerViewTop((RecyclerView) scrollableView);
+        }
+        return false;
+    }
+
+    private static boolean isRecyclerViewTop(RecyclerView recyclerView) {
+        if (recyclerView != null) {
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                View childAt = recyclerView.getChildAt(0);
+                if (childAt == null || (firstVisibleItemPosition == 0 && childAt != null && childAt.getTop() == 0)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -87,26 +106,27 @@ public class ScrollableHelper {
     private static boolean isScrollViewTop(ScrollView scrollView){
         if(scrollView != null) {
             int scrollViewY = scrollView.getScrollY();
-//            android.util.Log.e("cp:", "isScrollViewTop scrollY:" + scrollViewY);
             return scrollViewY <= 0;
         }
         return false;
     }
 
     @SuppressLint("NewApi")
-    public void smoothScrollBy(float velocityY, int distance, int duration) {
+    public void smoothScrollBy(int velocityY, int distance, int duration) {
         View scrollableView = getScrollableView();
         if (scrollableView instanceof AbsListView) {
             AbsListView absListView = (AbsListView) scrollableView;
             if (sysVersion >= 21) {
-                absListView.fling((int) velocityY);
+                absListView.fling(velocityY);
             } else {
                 absListView.smoothScrollBy(distance, duration);
             }
         } else if (scrollableView instanceof ScrollView) {
-            ScrollView scrollView = (ScrollView) scrollableView;
-            scrollView.fling((int) velocityY);
+            ((ScrollView) scrollableView).fling(velocityY);
+        } else if (scrollableView instanceof RecyclerView) {
+            ((RecyclerView) scrollableView).fling(0, velocityY);
         }
+
 
     }
 

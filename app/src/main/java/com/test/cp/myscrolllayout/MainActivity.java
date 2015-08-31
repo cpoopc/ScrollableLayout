@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
         mFragmentList = new ArrayList<>();
         mFragmentList.add(ListFragment.newInstance(0));
         mFragmentList.add(ScrollViewFragment.newInstance(1));
-        mFragmentList.add(ListFragment.newInstance(2));
+        mFragmentList.add(RecyclerViewFragment.newInstance(2));
 
         List<String> titleList = new ArrayList<>();
         titleList.add("tab0");
