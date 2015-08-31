@@ -1,6 +1,6 @@
 # ScrollableLayout
 共同头部+ViewPager+ListView(AdapterView)|RecyclerView|ScrollView    
-blog:http://blog.csdn.net/w7822938/article/details/47173047 
+blog:http://blog.csdn.net/w7822938/article/details/47173047  
 NOTE:  
 2015/8/31:  
 添加对RecyclerView的支持.  
