@@ -22,15 +22,8 @@ public class ListFragment extends ScrollAbleFragment implements ScrollableHelper
 
     private ListView mListview;
 
-    private int page;
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public static ListFragment newInstance(int page) {
+    public static ListFragment newInstance() {
         ListFragment listFragment = new ListFragment();
-        listFragment.setPage(page);
         return listFragment;
     }
 

@@ -34,15 +34,16 @@ public class MainActivity extends ActionBarActivity {
 //        int headHeight = getResources().getDimensionPixelSize(R.dimen.head_height);
 //        int tabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
 //        mScrollLayout.setClickHeadExpand(headHeight + tabHeight);
+
         mFragmentList = new ArrayList<>();
-        mFragmentList.add(ListFragment.newInstance(0));
-        mFragmentList.add(ScrollViewFragment.newInstance(1));
-        mFragmentList.add(RecyclerViewFragment.newInstance(2));
+        mFragmentList.add(ListFragment.newInstance());
+        mFragmentList.add(ScrollViewFragment.newInstance());
+        mFragmentList.add(RecyclerViewFragment.newInstance());
 
         List<String> titleList = new ArrayList<>();
-        titleList.add("tab0");
-        titleList.add("tab1");
-        titleList.add("tab2");
+        titleList.add("ListView");
+        titleList.add("ScrollView");
+        titleList.add("RecyclerView");
         viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList, titleList));
         mScrollLayout.getHelper().setCurrentScrollableContainer(mFragmentList.get(0));
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.pagerStrip);

@@ -20,17 +20,11 @@ import java.util.Random;
 
 public class ScrollViewFragment extends ScrollAbleFragment implements ScrollableHelper.ScrollableContainer{
 
-    private int page;
     private ScrollView scrollView;
 
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public static ScrollViewFragment newInstance(int page) {
-        ScrollViewFragment listFragment = new ScrollViewFragment();
-        listFragment.setPage(page);
-        return listFragment;
+    public static ScrollViewFragment newInstance() {
+        ScrollViewFragment scrollViewFragment = new ScrollViewFragment();
+        return scrollViewFragment;
     }
 
     @Override

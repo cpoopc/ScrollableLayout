@@ -18,27 +18,19 @@ public class RecyclerViewFragment extends ScrollAbleFragment implements Scrollab
 
     private RecyclerView mRecyclerView;
 
-    private int page;
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public static RecyclerViewFragment newInstance(int page) {
-        RecyclerViewFragment listFragment = new RecyclerViewFragment();
-        listFragment.setPage(page);
-        return listFragment;
+    public static RecyclerViewFragment newInstance() {
+        RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
+        return recyclerViewFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         List<String> strlist = new ArrayList<String>();
-//        for (int i = 0; i < 99; i++) {
         for (int i = 0; i < new Random().nextInt(100) + 31; i++) {
             strlist.add(String.valueOf(i));
         }
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(new RecyclerAdapter(getActivity(), strlist));
