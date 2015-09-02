@@ -62,6 +62,7 @@ public class ScrollableLayout extends LinearLayout {
     private ViewPager childViewPager;
     private boolean flag1,flag2;
     private int mLastScrollerY;
+    private boolean mDisallowIntercept;
 
     /**
      * 滑动方向 *
@@ -129,6 +130,7 @@ public class ScrollableLayout extends LinearLayout {
 //        initVelocityTrackerIfNotExists();
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mDisallowIntercept = false;
                 flag1 = true;
                 flag2 = true;
                 mDownX = currentX;
@@ -146,6 +148,9 @@ public class ScrollableLayout extends LinearLayout {
                 mScroller.forceFinished(true);
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (mDisallowIntercept) {
+                    break;
+                }
                 initVelocityTrackerIfNotExists();
                 mVelocityTracker.addMovement(ev);
                 deltaY = mLastY - currentY;
@@ -216,6 +221,11 @@ public class ScrollableLayout extends LinearLayout {
         }
         super.dispatchTouchEvent(ev);
         return true;
+    }
+
+    public void requestScrollableLayoutDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        super.requestDisallowInterceptTouchEvent(disallowIntercept);
+        mDisallowIntercept = disallowIntercept;
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
