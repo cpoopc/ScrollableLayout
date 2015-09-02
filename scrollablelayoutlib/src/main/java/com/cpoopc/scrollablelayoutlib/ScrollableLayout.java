@@ -214,6 +214,7 @@ public class ScrollableLayout extends LinearLayout {
             default:
                 break;
         }
+        super.dispatchTouchEvent(ev);
         return true;
     }
 
