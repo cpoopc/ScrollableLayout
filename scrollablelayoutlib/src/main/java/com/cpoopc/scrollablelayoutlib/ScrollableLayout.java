@@ -61,6 +61,7 @@ public class ScrollableLayout extends LinearLayout {
     private int sysVersion;
     private ViewPager childViewPager;
     private boolean flag1,flag2;
+    private int mLastScrollerY;
 
     /**
      * 滑动方向 *
@@ -213,10 +214,8 @@ public class ScrollableLayout extends LinearLayout {
             default:
                 break;
         }
-        return super.dispatchTouchEvent(ev);
+        return true;
     }
-
-    private int mLastScrollerY;
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private int getScrollerVelocity(int distance, int duration) {
