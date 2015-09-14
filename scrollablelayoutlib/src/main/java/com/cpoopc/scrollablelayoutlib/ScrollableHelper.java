@@ -40,7 +40,13 @@ public class ScrollableHelper {
 
     private int sysVersion = android.os.Build.VERSION.SDK_INT;
 
+    /**
+     * a viewgroup whitch contains ScrollView/ListView/RecycelerView..
+     */
     public interface ScrollableContainer{
+        /**
+         * @return ScrollView/ListView/RecycelerView..'s instance
+         */
         View getScrollableView();
     }
 
@@ -56,15 +62,16 @@ public class ScrollableHelper {
     }
 
     /**
+     *
      * 判断是否滑动到顶部方法,ScrollAbleLayout根据此方法来做一些逻辑判断
-     * 目前只实现了AdapterView,ScrollView
+     * 目前只实现了AdapterView,ScrollView,RecyclerView
      * 需要支持其他view可以自行补充实现
      * @return
      */
     public boolean isTop() {
         View scrollableView = getScrollableView();
         if (scrollableView == null) {
-            return false;
+            throw new NullPointerException("You should call ScrollableHelper.setCurrentScrollableContainer() to set ScrollableContainer.");
         }
         if (scrollableView instanceof AdapterView) {
             return isAdapterViewTop((AdapterView) scrollableView);
@@ -75,7 +82,7 @@ public class ScrollableHelper {
         if (scrollableView instanceof RecyclerView) {
             return isRecyclerViewTop((RecyclerView) scrollableView);
         }
-        return false;
+        throw new IllegalStateException("scrollableView must be a instance of AdapterView|ScrollView|RecyclerView");
     }
 
     private static boolean isRecyclerViewTop(RecyclerView recyclerView) {
