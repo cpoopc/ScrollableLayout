@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
@@ -78,6 +79,17 @@ public class ScrollableLayout extends LinearLayout {
     private int mCurY;
     private boolean isClickHead;
     private boolean isClickHeadExpand;
+
+    public interface OnScrollListener{
+
+        void onScroll(int currentY, int maxY);
+
+    }
+    private OnScrollListener onScrollListener;
+
+    public void setOnScrollListener(OnScrollListener onScrollListener) {
+        this.onScrollListener = onScrollListener;
+    }
 
     private ScrollableHelper mHelper;
 
@@ -300,12 +312,16 @@ public class ScrollableLayout extends LinearLayout {
 
     @Override
     public void scrollTo(int x, int y) {
+//        Log.d(tag, "scrollTo " + y);
         if (y >= maxY) {
             y = maxY;
         } else if (y <= minY) {
             y = minY;
         }
         mCurY = y;
+        if (onScrollListener != null) {
+            onScrollListener.onScroll(y, maxY);
+        }
         super.scrollTo(x, y);
     }
 

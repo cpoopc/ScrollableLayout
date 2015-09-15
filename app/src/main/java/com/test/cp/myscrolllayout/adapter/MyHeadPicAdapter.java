@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout;
+package com.test.cp.myscrolllayout.adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -12,7 +12,7 @@ import com.test.cp.myscrolllayout.constant.ColorsConstant;
 import java.util.ArrayList;
 import java.util.List;
 
-class MyHeadPicAdapter extends PagerAdapter {
+public class MyHeadPicAdapter extends PagerAdapter {
 
     List<ImageView> imageViews = new ArrayList<ImageView>();
 

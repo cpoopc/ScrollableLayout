@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout;/**
+package com.test.cp.myscrolllayout.adapter;/**
  * Created by cpoopc on 2015/8/31.
  */
 
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.test.cp.myscrolllayout.R;
 import com.test.cp.myscrolllayout.constant.ColorsConstant;
 
 import java.util.List;

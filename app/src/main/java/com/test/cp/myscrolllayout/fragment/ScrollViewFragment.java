@@ -1,21 +1,15 @@
-package com.test.cp.myscrolllayout;
+package com.test.cp.myscrolllayout.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.cpoopc.scrollablelayoutlib.ScrollableHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import com.test.cp.myscrolllayout.R;
+import com.test.cp.myscrolllayout.fragment.base.ScrollAbleFragment;
 
 
 public class ScrollViewFragment extends ScrollAbleFragment implements ScrollableHelper.ScrollableContainer{

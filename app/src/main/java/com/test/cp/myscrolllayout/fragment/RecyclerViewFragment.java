@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout;
+package com.test.cp.myscrolllayout.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cpoopc.scrollablelayoutlib.ScrollableHelper;
+import com.test.cp.myscrolllayout.R;
+import com.test.cp.myscrolllayout.adapter.RecyclerAdapter;
+import com.test.cp.myscrolllayout.fragment.base.ScrollAbleFragment;
 
 import java.util.ArrayList;
 import java.util.List;

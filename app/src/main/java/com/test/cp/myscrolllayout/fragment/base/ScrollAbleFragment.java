@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout;/**
+package com.test.cp.myscrolllayout.fragment.base;/**
  * Created by cpoopc on 2015/8/28.
  */
 

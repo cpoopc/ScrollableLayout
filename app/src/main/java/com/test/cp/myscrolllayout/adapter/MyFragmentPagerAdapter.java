@@ -1,10 +1,10 @@
-package com.test.cp.myscrolllayout;
+package com.test.cp.myscrolllayout.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.view.View;
+
+import com.test.cp.myscrolllayout.fragment.base.ScrollAbleFragment;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.test.cp.myscrolllayout;
+package com.test.cp.myscrolllayout.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.test.cp.myscrolllayout.R;
 import com.test.cp.myscrolllayout.constant.ColorsConstant;
 
 import java.util.List;

@@ -2,70 +2,66 @@ package com.test.cp.myscrolllayout;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-import com.astuetz.PagerSlidingTabStrip;
-import com.cpoopc.scrollablelayoutlib.ScrollableLayout;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.test.cp.myscrolllayout.fragment.PagerHeaderFragment;
+import com.test.cp.myscrolllayout.fragment.ParallaxImageHeaderFragment;
 
 
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends ActionBarActivity {
-
-    private List<ScrollAbleFragment> mFragmentList;
-    private ScrollableLayout mScrollLayout;
+    private View scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        // 头部图片集
-        ViewPager vpImage = (ViewPager) findViewById(R.id.imagepager);
-        vpImage.setAdapter(new MyHeadPicAdapter(this));
-
-        // ScrollableLayout
-        mScrollLayout = (ScrollableLayout) findViewById(R.id.scrollableLayout);
-        // 扩展点击头部滑动范围
-//        int headHeight = getResources().getDimensionPixelSize(R.dimen.head_height);
-//        int tabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
-//        mScrollLayout.setClickHeadExpand(headHeight + tabHeight);
-
-        mFragmentList = new ArrayList<>();
-        mFragmentList.add(ListFragment.newInstance());
-        mFragmentList.add(ScrollViewFragment.newInstance());
-        mFragmentList.add(RecyclerViewFragment.newInstance());
-
-        List<String> titleList = new ArrayList<>();
-        titleList.add("ListView");
-        titleList.add("ScrollView");
-        titleList.add("RecyclerView");
-        viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList, titleList));
-        mScrollLayout.getHelper().setCurrentScrollableContainer(mFragmentList.get(0));
-        PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.pagerStrip);
-        pagerSlidingTabStrip.setViewPager(viewPager);
-        pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i2) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                Log.e("onPageSelected","page:"+i);
-                mScrollLayout.getHelper().setCurrentScrollableContainer(mFragmentList.get(i));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-        viewPager.setCurrentItem(0);
+        scrollView = findViewById(R.id.scrollView);
     }
 
+    public void showParallaxFragment(View view) {
+        showFragment(ParallaxImageHeaderFragment.class);
+    }
+
+    public void showPagerHeaderFragment(View view) {
+        showFragment(PagerHeaderFragment.class);
+    }
+
+    public <T extends Fragment> void showFragment(Class<T> clzz) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        try {
+            if (fragment == null) {
+                getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, clzz.newInstance(), clzz.getSimpleName()).commit();
+            } else {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, clzz.newInstance(), clzz.getSimpleName()).commit();
+            }
+            getSupportActionBar().setTitle(clzz.getSimpleName());
+            scrollView.setVisibility(View.GONE);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!removeFragment()) {
+            super.onBackPressed();
+        } else {
+            scrollView.setVisibility(View.VISIBLE);
+            getSupportActionBar().setTitle(R.string.app_name);
+        }
+    }
+
+    public boolean removeFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
