@@ -11,6 +11,12 @@ NOTE:
 <img width="400" height="720" src="https://github.com/cpoopc/ScrollableLayout/blob/master/image/preview.gif" />
 
 ## Usage
+```
+dependencies {
+	compile 'com.github.cpoopc:scrollablelayoutlib:1.0.0' // 目前只发布到jcenter
+}
+```
+
 1.xml
 ```
 <com.cpoopc.scrollablelayoutlib.ScrollableLayout
