@@ -383,6 +383,14 @@ public class ScrollableLayout extends LinearLayout {
         return maxY;
     }
 
+    public boolean isHeadTop() {
+        return mCurY == minY;
+    }
+
+    public boolean canPtr() {
+        return flag2 && mCurY == minY && mHelper.isTop();
+    }
+
     @Override
     protected void onFinishInflate() {
         if (mHeadView != null && !mHeadView.isClickable()) {
