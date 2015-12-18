@@ -27,6 +27,7 @@ import android.annotation.SuppressLint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
@@ -82,6 +83,9 @@ public class ScrollableHelper {
         if (scrollableView instanceof RecyclerView) {
             return isRecyclerViewTop((RecyclerView) scrollableView);
         }
+        if (scrollableView instanceof WebView) {
+            return isWebViewTop((WebView) scrollableView);
+        }
         throw new IllegalStateException("scrollableView must be a instance of AdapterView|ScrollView|RecyclerView");
     }
 
@@ -118,6 +122,14 @@ public class ScrollableHelper {
         return false;
     }
 
+    private static boolean isWebViewTop(WebView scrollView){
+        if(scrollView != null) {
+            int scrollViewY = scrollView.getScrollY();
+            return scrollViewY <= 0;
+        }
+        return false;
+    }
+
     @SuppressLint("NewApi")
     public void smoothScrollBy(int velocityY, int distance, int duration) {
         View scrollableView = getScrollableView();
@@ -132,6 +144,8 @@ public class ScrollableHelper {
             ((ScrollView) scrollableView).fling(velocityY);
         } else if (scrollableView instanceof RecyclerView) {
             ((RecyclerView) scrollableView).fling(0, velocityY);
+        } else if (scrollableView instanceof WebView) {
+            ((WebView) scrollableView).flingScroll(0, velocityY);
         }
 
 

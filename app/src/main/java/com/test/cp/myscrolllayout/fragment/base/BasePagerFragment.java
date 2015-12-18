@@ -12,6 +12,7 @@ import com.test.cp.myscrolllayout.adapter.MyFragmentPagerAdapter;
 import com.test.cp.myscrolllayout.fragment.ListFragment;
 import com.test.cp.myscrolllayout.fragment.RecyclerViewFragment;
 import com.test.cp.myscrolllayout.fragment.ScrollViewFragment;
+import com.test.cp.myscrolllayout.fragment.WebViewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,13 @@ public abstract class BasePagerFragment extends Fragment{
         fragmentList.add(ListFragment.newInstance());
         fragmentList.add(ScrollViewFragment.newInstance());
         fragmentList.add(RecyclerViewFragment.newInstance());
+        fragmentList.add(WebViewFragment.newInstance());
 
         List<String> titleList = new ArrayList<>();
         titleList.add("ListView");
         titleList.add("ScrollView");
         titleList.add("RecyclerView");
+        titleList.add("WebView");
         viewPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(), fragmentList, titleList));
         mScrollLayout.getHelper().setCurrentScrollableContainer(fragmentList.get(0));
         pagerSlidingTabStrip.setViewPager(viewPager);
@@ -46,6 +49,7 @@ public abstract class BasePagerFragment extends Fragment{
             @Override
             public void onPageSelected(int i) {
                 Log.e("onPageSelected", "page:" + i);
+                /** 标注当前页面 **/
                 mScrollLayout.getHelper().setCurrentScrollableContainer(fragmentList.get(i));
             }
 

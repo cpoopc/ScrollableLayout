@@ -45,7 +45,7 @@ public class PagerHeaderFragment extends BasePagerFragment {
                 return mScrollLayout.canPtr();
 //                return PtrDefaultHandler.checkContentCanBePulledDown(frame, mScrollLayout, header);
             }
-            
+
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 mPtrFrame.postDelayed(new Runnable() {
