@@ -40,34 +40,33 @@ import android.widget.Scroller;
  */
 public class ScrollableLayout extends LinearLayout {
 
-    private Scroller mScroller;
+    private final String tag = "cp:scrollableLayout";
     private float mDownX;
     private float mDownY;
-    private float mLastX;
     private float mLastY;
-    private final String tag = "cp:scrollableLayout";
-    private VelocityTracker mVelocityTracker;
+
+    private int minY = 0;
+    private int maxY = 0;
+    private int mHeadHeight;
+    private int mExpandHeight;
     private int mTouchSlop;
     private int mMinimumVelocity;
     private int mMaximumVelocity;
     // 方向
     private DIRECTION mDirection;
-    private int mHeadHeight;
-    private int mScrollY;
-    private View mHeadView;
-    private int mExpandHeight = 0;
-    private int sysVersion;
-    private ViewPager childViewPager;
-    private boolean flag1, flag2;
-    private int mLastScrollerY;
-    private boolean mDisallowIntercept;
-
-    private int minY = 0;
-    private int maxY = 0;
-
     private int mCurY;
+    private int mLastScrollerY;
+    private boolean needCheckUpdown;
+    private boolean updown;
+    private boolean mDisallowIntercept;
     private boolean isClickHead;
     private boolean isClickHeadExpand;
+
+    private View mHeadView;
+    private ViewPager childViewPager;
+
+    private Scroller mScroller;
+    private VelocityTracker mVelocityTracker;
 
     /**
      * 滑动方向 *
@@ -117,14 +116,43 @@ public class ScrollableLayout extends LinearLayout {
         init(context);
     }
 
-    public void init(Context context) {
+    private void init(Context context) {
         mHelper = new ScrollableHelper();
         mScroller = new Scroller(context);
         final ViewConfiguration configuration = ViewConfiguration.get(context);
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
-        sysVersion = Build.VERSION.SDK_INT;
+    }
+
+    public boolean isSticked() {
+        return mCurY == maxY;
+    }
+
+    /**
+     * 扩大头部点击滑动范围
+     *
+     * @param expandHeight
+     */
+    public void setClickHeadExpand(int expandHeight) {
+        mExpandHeight = expandHeight;
+    }
+
+    public int getMaxY() {
+        return maxY;
+    }
+
+    public boolean isHeadTop() {
+        return mCurY == minY;
+    }
+
+    public boolean canPtr() {
+        return updown && mCurY == minY && mHelper.isTop();
+    }
+
+    public void requestScrollableLayoutDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        super.requestDisallowInterceptTouchEvent(disallowIntercept);
+        mDisallowIntercept = disallowIntercept;
     }
 
     @Override
@@ -132,20 +160,16 @@ public class ScrollableLayout extends LinearLayout {
         float currentX = ev.getX();
         float currentY = ev.getY();
         float deltaY;
-        int shiftX;
-        int shiftY;
-        shiftX = (int) Math.abs(currentX - mDownX);
-        shiftY = (int) Math.abs(currentY - mDownY);
+        int shiftX = (int) Math.abs(currentX - mDownX);
+        int shiftY = (int) Math.abs(currentY - mDownY);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDisallowIntercept = false;
-                flag1 = true;
-                flag2 = true;
+                needCheckUpdown = true;
+                updown = true;
                 mDownX = currentX;
                 mDownY = currentY;
-                mLastX = currentX;
                 mLastY = currentY;
-                mScrollY = getScrollY();
                 checkIsClickHead((int) currentY, mHeadHeight, getScrollY());
                 checkIsClickHeadExpand((int) currentY, mHeadHeight, getScrollY());
                 initOrResetVelocityTracker();
@@ -159,33 +183,35 @@ public class ScrollableLayout extends LinearLayout {
                 initVelocityTrackerIfNotExists();
                 mVelocityTracker.addMovement(ev);
                 deltaY = mLastY - currentY;
-                if (flag1) {
+                if (needCheckUpdown) {
                     if (shiftX > mTouchSlop && shiftX > shiftY) {
-                        flag1 = false;
-                        flag2 = false;
+                        needCheckUpdown = false;
+                        updown = false;
                     } else if (shiftY > mTouchSlop && shiftY > shiftX) {
-                        flag1 = false;
-                        flag2 = true;
+                        needCheckUpdown = false;
+                        updown = true;
                     }
                 }
 
-                if (flag2 && shiftY > mTouchSlop && shiftY > shiftX && (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
+                if (updown && shiftY > mTouchSlop && shiftY > shiftX &&
+                        (!isSticked() || mHelper.isTop() || isClickHeadExpand)) {
 
                     if (childViewPager != null) {
                         childViewPager.requestDisallowInterceptTouchEvent(true);
                     }
                     scrollBy(0, (int) (deltaY + 0.5));
                 }
-                mLastX = currentX;
                 mLastY = currentY;
                 break;
             case MotionEvent.ACTION_UP:
-                if (flag2 && shiftY > shiftX && shiftY > mTouchSlop) {
+                if (updown && shiftY > shiftX && shiftY > mTouchSlop) {
                     mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                     float yVelocity = -mVelocityTracker.getYVelocity();
+                    boolean dislowChild = false;
                     if (Math.abs(yVelocity) > mMinimumVelocity) {
                         mDirection = yVelocity > 0 ? DIRECTION.UP : DIRECTION.DOWN;
-                        if (mDirection == DIRECTION.UP && isSticked()) {
+                        if ((mDirection == DIRECTION.UP && isSticked()) || (!isSticked() && getScrollY() == 0 && mDirection == DIRECTION.DOWN)) {
+                            dislowChild = true;
                         } else {
                             mScroller.fling(0, getScrollY(), 0, (int) yVelocity, 0, 0, -Integer.MAX_VALUE, Integer.MAX_VALUE);
                             mScroller.computeScrollOffset();
@@ -193,22 +219,13 @@ public class ScrollableLayout extends LinearLayout {
                             invalidate();
                         }
                     }
-                    if (isClickHead || !isSticked()) {
+                    if (!dislowChild && (isClickHead || !isSticked())) {
                         int action = ev.getAction();
                         ev.setAction(MotionEvent.ACTION_CANCEL);
-                        boolean dd = super.dispatchTouchEvent(ev);
+                        boolean dispathResult = super.dispatchTouchEvent(ev);
                         ev.setAction(action);
-                        return dd;
+                        return dispathResult;
                     }
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                if (flag2 && isClickHead && (shiftX > mTouchSlop || shiftY > mTouchSlop)) {
-                    int action = ev.getAction();
-                    ev.setAction(MotionEvent.ACTION_CANCEL);
-                    boolean dd = super.dispatchTouchEvent(ev);
-                    ev.setAction(action);
-                    return dd;
                 }
                 break;
             default:
@@ -218,16 +235,11 @@ public class ScrollableLayout extends LinearLayout {
         return true;
     }
 
-    public void requestScrollableLayoutDisallowInterceptTouchEvent(boolean disallowIntercept) {
-        super.requestDisallowInterceptTouchEvent(disallowIntercept);
-        mDisallowIntercept = disallowIntercept;
-    }
-
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private int getScrollerVelocity(int distance, int duration) {
         if (mScroller == null) {
             return 0;
-        } else if (sysVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return (int) mScroller.getCurrVelocity();
         } else {
             return distance / duration;
@@ -264,10 +276,6 @@ public class ScrollableLayout extends LinearLayout {
             }
             mLastScrollerY = currY;
         }
-    }
-
-    public boolean isSticked() {
-        return mCurY == maxY;
     }
 
     @Override
@@ -329,15 +337,6 @@ public class ScrollableLayout extends LinearLayout {
         isClickHeadExpand = downY + scrollY <= headHeight + mExpandHeight;
     }
 
-    /**
-     * 扩大头部点击滑动范围
-     *
-     * @param expandHeight
-     */
-    public void setClickHeadExpand(int expandHeight) {
-        mExpandHeight = expandHeight;
-    }
-
     private int calcDuration(int duration, int timepass) {
         return duration - timepass;
     }
@@ -349,18 +348,6 @@ public class ScrollableLayout extends LinearLayout {
         maxY = mHeadView.getMeasuredHeight();
         mHeadHeight = mHeadView.getMeasuredHeight();
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec) + maxY, MeasureSpec.EXACTLY));
-    }
-
-    public int getMaxY() {
-        return maxY;
-    }
-
-    public boolean isHeadTop() {
-        return mCurY == minY;
-    }
-
-    public boolean canPtr() {
-        return flag2 && mCurY == minY && mHelper.isTop();
     }
 
     @Override

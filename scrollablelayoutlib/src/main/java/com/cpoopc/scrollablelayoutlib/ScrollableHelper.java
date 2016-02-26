@@ -24,6 +24,7 @@
 package com.cpoopc.scrollablelayoutlib;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -38,8 +39,6 @@ import android.widget.ScrollView;
 public class ScrollableHelper {
 
     private ScrollableContainer mCurrentScrollableCainer;
-
-    private int sysVersion = android.os.Build.VERSION.SDK_INT;
 
     /**
      * a viewgroup whitch contains ScrollView/ListView/RecycelerView..
@@ -72,7 +71,8 @@ public class ScrollableHelper {
     public boolean isTop() {
         View scrollableView = getScrollableView();
         if (scrollableView == null) {
-            throw new NullPointerException("You should call ScrollableHelper.setCurrentScrollableContainer() to set ScrollableContainer.");
+//            throw new NullPointerException("You should call ScrollableHelper.setCurrentScrollableContainer() to set ScrollableContainer.");
+            return true;
         }
         if (scrollableView instanceof AdapterView) {
             return isAdapterViewTop((AdapterView) scrollableView);
@@ -95,7 +95,7 @@ public class ScrollableHelper {
             if (layoutManager instanceof LinearLayoutManager) {
                 int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
                 View childAt = recyclerView.getChildAt(0);
-                if (childAt == null || (firstVisibleItemPosition == 0 && childAt != null && childAt.getTop() == 0)) {
+                if (childAt == null || (firstVisibleItemPosition == 0 && childAt.getTop() == 0)) {
                     return true;
                 }
             }
@@ -107,7 +107,7 @@ public class ScrollableHelper {
         if(adapterView != null){
             int firstVisiblePosition = adapterView.getFirstVisiblePosition();
             View childAt = adapterView.getChildAt(0);
-            if(childAt == null || (firstVisiblePosition == 0 && childAt != null && childAt.getTop() == 0)){
+            if(childAt == null || (firstVisiblePosition == 0 && childAt.getTop() == 0)){
                 return true;
             }
         }
@@ -135,7 +135,7 @@ public class ScrollableHelper {
         View scrollableView = getScrollableView();
         if (scrollableView instanceof AbsListView) {
             AbsListView absListView = (AbsListView) scrollableView;
-            if (sysVersion >= 21) {
+            if (Build.VERSION.SDK_INT >= 21) {
                 absListView.fling(velocityY);
             } else {
                 absListView.smoothScrollBy(distance, duration);
@@ -147,9 +147,6 @@ public class ScrollableHelper {
         } else if (scrollableView instanceof WebView) {
             ((WebView) scrollableView).flingScroll(0, velocityY);
         }
-
-
     }
-
 
 }
