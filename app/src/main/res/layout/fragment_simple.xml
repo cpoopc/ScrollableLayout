@@ -1,0 +1,38 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.cpoopc.scrollablelayoutlib.ScrollableLayout
+        android:id="@+id/scrollableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_head"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/head_height"
+            android:background="#cdcdcd">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/imagepager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </RelativeLayout>
+
+        <com.astuetz.PagerSlidingTabStrip
+            android:id="@+id/pagerStrip"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:layout_alignParentBottom="true"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.cpoopc.scrollablelayoutlib.ScrollableLayout>
+</RelativeLayout>

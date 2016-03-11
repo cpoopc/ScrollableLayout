@@ -37,6 +37,12 @@ public class PagerHeaderFragment extends BasePagerFragment {
         mScrollLayout = (ScrollableLayout) layout.findViewById(R.id.scrollableLayout);
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) layout.findViewById(R.id.pagerStrip);
         initFragmentPager(viewPager, pagerSlidingTabStrip, mScrollLayout);
+        setupPullToRefresh(layout);
+
+        return layout;
+    }
+
+    private void setupPullToRefresh(View layout) {
         mPtrFrame = (PtrClassicFrameLayout) layout.findViewById(R.id.rotate_header_web_view_frame);
         mPtrFrame.setLastUpdateTimeRelateObject(this);
         mPtrFrame.setPtrHandler(new PtrHandler() {
@@ -72,8 +78,6 @@ public class PagerHeaderFragment extends BasePagerFragment {
                 mPtrFrame.autoRefresh();
             }
         }, 100);
-
-        return layout;
     }
 
 }

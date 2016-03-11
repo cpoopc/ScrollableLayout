@@ -12,6 +12,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                android:onClick="showSimpleDemoFragment"
+                android:text="SimpleDemo 简单示例"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
                 android:onClick="showPagerHeaderFragment"
                 android:text="PagerHeaderFragment"
                 android:layout_width="match_parent"

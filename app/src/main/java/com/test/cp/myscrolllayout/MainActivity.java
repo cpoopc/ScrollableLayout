@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.test.cp.myscrolllayout.fragment.PagerHeaderFragment;
 import com.test.cp.myscrolllayout.fragment.ParallaxImageHeaderFragment;
+import com.test.cp.myscrolllayout.fragment.SimpleDemoFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void showPagerHeaderFragment(View view) {
         showFragment(PagerHeaderFragment.class);
+    }
+
+    public void showSimpleDemoFragment(View view) {
+        showFragment(SimpleDemoFragment.class);
     }
 
     public <T extends Fragment> void showFragment(Class<T> clzz) {
