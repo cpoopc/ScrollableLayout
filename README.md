@@ -17,7 +17,7 @@ blog:http://blog.csdn.net/w7822938/article/details/47173047
 ## Usage
 ```
 dependencies {
-	compile 'com.github.cpoopc:scrollablelayoutlib:1.0.0' // 目前只发布到jcenter
+	compile 'com.github.cpoopc:scrollablelayoutlib:1.0.1' // 目前只发布到jcenter
 }
 ```
 
